@@ -20,6 +20,11 @@ echo "InputFile: $INPUT_FILE"
 echo "OutputDir: $OUTPUT_DIR"
 
 mkdir -p "$OUTPUT_DIR"
-ffmpeg -i "$INPUT_FILE" -c:v copy -c:a copy -f hls -hls_time 10 -hls_playlist_type vod -hls_segment_filename "$OUTPUT_DIR/segment_%3d.ts" "$OUTPUT_DIR/index.m3u8"
+# https://developer.apple.com/documentation/http_live_streaming/hls_authoring_specification_for_apple_devices
+ffmpeg -i "$INPUT_FILE" -y                                                  \
+        -vcodec h264 -profile:v high -level 4.1 -pix_fmt yuv420p            \
+        -acodec aac                                                         \
+        -f hls -hls_time 10 -hls_playlist_type vod -hls_segment_filename    \
+        "$OUTPUT_DIR/segment_%3d.ts" "$OUTPUT_DIR/index.m3u8"
 # Generates a thumbnail
 ffmpeg -i "$INPUT_FILE" -ss 5 -vframes 1 -f image2 -s 320x240 "$OUTPUT_DIR/thumbnail.png"
