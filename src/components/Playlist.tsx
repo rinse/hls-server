@@ -16,7 +16,7 @@ const useVideoListStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export default function PlayList(props: PlayListProps) {
+export default function Playlist(props: PlayListProps) {
     const styles = useVideoListStyles();
     const listItemVideo = props.videos.map(v =>
         <ListItem button component='a' key={v}

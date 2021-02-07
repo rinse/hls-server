@@ -2,15 +2,14 @@ import React from 'react'
 import {Box, Container} from '@material-ui/core'
 import ReactPlayer from 'react-player'
 import If from './If'
-import PlayList from './PlayList'
+import PlaylistContainer from './containers/PlaylistContainer'
 
 export interface TheatreProps {
     video?: string
-    playList: string[]
 }
 
 export default function Theatre(props: TheatreProps) {
-    const { video, playList } = props
+    const {video} = props
     return (
         <Container>
             <Box marginTop={6}>
@@ -22,7 +21,7 @@ export default function Theatre(props: TheatreProps) {
                 </If>
             </Box>
             <Box marginTop={6}>
-                <PlayList videos={playList} currentVideo={video} />
+                <PlaylistContainer />
             </Box>
         </Container>
     )

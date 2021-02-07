@@ -1,17 +1,12 @@
 import {Box, Container} from '@material-ui/core'
 import React from 'react'
-import PlayList from './PlayList'
+import PlaylistContainer from './containers/PlaylistContainer'
 
-export interface HomeProps {
-    playList: string[]
-}
-
-export default function Home(props: HomeProps) {
-    const {playList} = props
+export default function Home() {
     return (
         <Container>
             <Box marginTop={6}>
-                <PlayList videos={playList} />
+                <PlaylistContainer />
             </Box>
         </Container>
     )
