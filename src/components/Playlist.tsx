@@ -3,11 +3,11 @@ import {Avatar, createStyles, List, ListItem, ListItemAvatar, ListItemText, Them
 import {makeStyles} from '@material-ui/core/styles'
 
 export interface PlayListProps {
-    videos: string[]
-    currentVideo?: string
+    videoTitles: string[]
+    selected?: string
 }
 
-const useVideoListStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             width: '100%',
@@ -17,21 +17,19 @@ const useVideoListStyles = makeStyles((theme: Theme) =>
 );
 
 export default function Playlist(props: PlayListProps) {
-    const styles = useVideoListStyles();
-    const listItemVideo = props.videos.map(v =>
-        <ListItem button component='a' key={v}
-                  href={`/watch?v=${encodeURI(v)}`} selected={v === props.currentVideo}>
-            <ListItemAvatar>
-                <Avatar src={`video/${v}/thumbnail.png`} />
-            </ListItemAvatar>
-            <ListItemText primary={v}/>
-        </ListItem>
-    );
+    const classes = useStyles();
+    const {videoTitles, selected} = props
     return (
-        <div className={styles.root}>
-            <List component={'nav'}>
-                {listItemVideo}
-            </List>
-        </div>
+        <List className={classes.root} component={'nav'}>
+            {videoTitles.map(videoTitle =>
+                <ListItem button component='a' key={videoTitle}
+                          href={`/watch?v=${encodeURI(videoTitle)}`} selected={videoTitle === selected}>
+                    <ListItemAvatar>
+                        <Avatar src={`video/${videoTitle}/thumbnail.png`}/>
+                    </ListItemAvatar>
+                    <ListItemText primary={videoTitle}/>
+                </ListItem>
+            )}
+        </List>
     );
 }

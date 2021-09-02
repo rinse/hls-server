@@ -1,53 +1,25 @@
-import React, {useEffect, useState} from 'react'
+import {CircularProgress, Typography} from '@material-ui/core'
 import axios from 'axios'
-import {Box, CircularProgress, Container, Typography} from '@material-ui/core'
+import React from 'react'
 import Playlist from '../Playlist'
+import usePromise, {PromiseResultRenderer} from "../hooks/usePromise";
 
-interface PlayListResponse {
-    videos: string[]
-    isLoading: boolean
-    error?: Error
-}
-
-function usePlaylist(): PlayListResponse {
-    const [videos, setVideos] = useState<string[]>([])
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState<Error | undefined>(undefined)
-    void useEffect(() => {
-        void (async () => {
-            try {
-                setIsLoading(true)
-                const playlist = await axios.get('/video/playlist.json', {
-                    timeout: 5000
-                }).then(res => res.data?.videos)
-                if (playlist) {
-                    setVideos(playlist)
-                }
-            } catch (e) {
-                setError(e)
-            } finally {
-                setIsLoading(false)
-            }
-        })()
-    }, [])
-    return {videos, isLoading, error}
+const getPlaylist = async () => {
+    const playlist = await axios.get('/video/playlist.json', {timeout: 5000}).then(res => res.data)
+    if (playlist.videos === undefined || playlist.videos === null) {
+        throw new Error('Failed to fetch playlist.')
+    }
+    return playlist.videos as string[]
 }
 
 export default function PlaylistContainer() {
-    const {videos, isLoading, error} = usePlaylist()
-    let element
-    if (isLoading) {
-        element = <CircularProgress />
-    } else if (error !== undefined) {
-        element = <Typography>{error.message}</Typography>
-    } else {
-        element = <Playlist videos={videos} />
-    }
+    const promiseResult = usePromise(getPlaylist)
     return (
-        <Container>
-            <Box marginTop={6}>
-                {element}
-            </Box>
-        </Container>
+        <PromiseResultRenderer
+            promiseResult={promiseResult}
+            onPending={<CircularProgress/>}
+            onRejected={e => <Typography>{e.message}</Typography>}
+            onFulfilled={value => <Playlist videoTitles={value}/>}
+        />
     )
 }

@@ -1,28 +1,31 @@
+import {Box, Container, createStyles} from '@material-ui/core'
+import {makeStyles} from "@material-ui/core/styles";
 import React from 'react'
-import {Box, Container} from '@material-ui/core'
 import ReactPlayer from 'react-player'
-import If from './If'
 import PlaylistContainer from './containers/PlaylistContainer'
 
+const useStyles = makeStyles((theme) => createStyles({
+    videoTitle: {
+        fontWeight: 400,
+        fontSize: '18px',
+        lineHeight: '2.4rem',
+    },
+}))
+
 export interface TheatreProps {
-    video?: string
+    video: string
 }
 
 export default function Theatre(props: TheatreProps) {
     const {video} = props
+    const classes = useStyles()
     return (
-        <Container>
-            <Box marginTop={6}>
-                <If condition={video !== undefined}>
-                    <ReactPlayer url={`/video/${video}/index.m3u8`}
-                                 className='react-player' controls
-                                 width='100%' height='100%'/>
-                    <h1 style={{fontWeight: 400, fontSize: '18px', lineHeight: '2.4rem'}}>{video}</h1>
-                </If>
-            </Box>
-            <Box marginTop={6}>
-                <PlaylistContainer />
-            </Box>
-        </Container>
+        <>
+            <ReactPlayer url={`/video/${video}/index.m3u8`}
+                         className='react-player' controls
+                         width='100%' height='100%'/>
+            <h1 className={classes.videoTitle}>{video}</h1>
+            <PlaylistContainer/>
+        </>
     )
 }
