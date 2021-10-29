@@ -1,12 +1,17 @@
 import React, {ReactElement, ReactNode, useEffect, useState} from "react";
+import {Omit} from "@material-ui/core";
 
-type PromiseReject = { type: 'rejected', value: Error }
-type PromisePending = { type: 'pending' }
-type PromiseFulfilled<T> = { type: 'fulfilled', value: T }
-export type PromiseResult<T> = PromiseReject | PromisePending | PromiseFulfilled<T>
+export type PromiseResult<T>
+    = { type: 'rejected', value: Error }
+    | { type: 'pending' }
+    | { type: 'fulfilled', value: T }
 
-function usePromise<T>(f: () => Promise<T>): PromiseResult<T> {
+type AsynchronousFunction<T> = () => Promise<T>
+type DispatchReload = () => void
+
+function usePromise<T>(f: AsynchronousFunction<T>): { result: PromiseResult<T>, reload: DispatchReload } {
     const [result, setResult] = useState<PromiseResult<T>>({type: 'pending'})
+    const [reloadKey, setReloadKey] = useState({})
     useEffect(() => {
         void (async () => {
             try {
@@ -16,26 +21,37 @@ function usePromise<T>(f: () => Promise<T>): PromiseResult<T> {
                 setResult({type: 'rejected', value: e})
             }
         })()
-    }, [f])
-    return result
+    }, [f, reloadKey])
+    const reload = () => setReloadKey({})
+    return {result, reload}
 }
 
 export default usePromise
 
 interface PromiseRendererProps<T> {
     promiseResult: PromiseResult<T>,
-    onPending?: ReactNode,
+    onPending?: () => ReactNode,
     onRejected?: (e: Error) => ReactNode,
     onFulfilled?: (value: T) => ReactNode,
 }
 
 export function PromiseResultRenderer<T>(props: PromiseRendererProps<T>): ReactElement {
     const {promiseResult, onPending, onRejected, onFulfilled} = props
-    if (promiseResult.type === 'pending') {
-        return <>{onPending}</>
+    switch (promiseResult.type) {
+        case 'pending':
+            return <>{onPending ? onPending() : undefined}</>
+        case 'rejected':
+            return <>{onRejected ? onRejected(promiseResult.value) : undefined}</>
+        case 'fulfilled':
+            return <>{onFulfilled ? onFulfilled(promiseResult.value) : undefined}</>
     }
-    if (promiseResult.type === 'rejected') {
-        return <>{onRejected ? onRejected(promiseResult.value) : undefined}</>
-    }
-    return <>{onFulfilled ? onFulfilled(promiseResult.value) : undefined}</>
+}
+
+type PromiseContainerProps<T> = { asyncFunction: AsynchronousFunction<T> }
+    & Omit<PromiseRendererProps<T>, 'promiseResult'>
+
+export function PromiseContainer<T>(props: PromiseContainerProps<T>) {
+    const {asyncFunction, ...others} = props
+    const {result} = usePromise(asyncFunction)
+    return <PromiseResultRenderer promiseResult={result} {...others}/>
 }

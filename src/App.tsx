@@ -1,6 +1,6 @@
 import React, {PropsWithChildren, useState} from 'react'
 import {BrowserRouter as Router, Route} from 'react-router-dom'
-import queryString, {ParsedQuery} from 'query-string'
+import queryString from 'query-string'
 import Theatre from './components/Theatre'
 import {AppBar, Box, Container, createStyles, Drawer} from "@material-ui/core";
 import clsx from "clsx";
