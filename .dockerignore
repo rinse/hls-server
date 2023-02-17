@@ -1,0 +1,12 @@
+/docker-compose.yml
+/Dockerfile
+
+/hls-streaming.iml
+
+/node_modules
+/build
+
+/public/video
+/README.md
+/mkPlaylist.bash
+/toHLS.bash

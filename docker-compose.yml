@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  nginx:
+    image: hls-streaming
+    build:
+      context: .
+    ports:
+      - 3001:80
+    volumes:
+      - './public/video:/usr/share/nginx/html/video'
+    restart: always
