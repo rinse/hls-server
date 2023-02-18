@@ -5,7 +5,7 @@ import Playlist from '../Playlist'
 import {PromiseContainer} from '../hooks/usePromise'
 
 const getPlaylist = async () => {
-    const playlist = await axios.get('/video/playlist.json', {timeout: 5000}).then(res => res.data)
+    const playlist = await axios.get('/videos/playlist.json', {timeout: 5000}).then(res => res.data)
     if (playlist.videos === undefined || playlist.videos === null) {
         throw new Error('Failed to fetch playlist.')
     }

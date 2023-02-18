@@ -6,7 +6,7 @@
 /node_modules
 /build
 
-/public/video
+/public/videos
 /README.md
 /mkPlaylist.bash
 /toHLS.bash

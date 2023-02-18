@@ -25,7 +25,7 @@ export default function Playlist(props: PlayListProps) {
                 <ListItem button component='a' key={videoTitle}
                           href={`/watch?v=${encodeURI(videoTitle)}`} selected={videoTitle === selected}>
                     <ListItemAvatar>
-                        <Avatar src={`video/${videoTitle}/thumbnail.png`}/>
+                        <Avatar src={`videos/${videoTitle}/thumbnail.png`}/>
                     </ListItemAvatar>
                     <ListItemText primary={videoTitle}/>
                 </ListItem>

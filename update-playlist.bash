@@ -2,7 +2,7 @@
 set -eu
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-workDir=$SCRIPT_DIR/public/video
+workDir=$SCRIPT_DIR/public/videos
 playlist=playlist.json
 
 mkdir -p "$workDir"

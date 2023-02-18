@@ -21,7 +21,7 @@ export default function Theatre(props: TheatreProps) {
     const classes = useStyles()
     return (
         <>
-            <ReactPlayer url={`/video/${video}/index.m3u8`}
+            <ReactPlayer url={`/videos/${video}/index.m3u8`}
                          className='react-player' controls
                          width='100%' height='100%'/>
             <h1 className={classes.videoTitle}>{video}</h1>
