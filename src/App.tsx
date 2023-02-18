@@ -1,36 +1,56 @@
-import React, {PropsWithChildren} from "react";
-import {Box, Container} from "@mui/material";
-import {createBrowserRouter, useSearchParams, RouterProvider, Link} from "react-router-dom";
-import Theatre from "./components/Theatre";
+import React, {useCallback} from "react"
+import {Button, Container, Divider, List, ListItemButton} from "@mui/material";
+import {Menu as MenuIcon} from "@mui/icons-material";
+import {createBrowserRouter, useSearchParams, RouterProvider, Link, useNavigate} from "react-router-dom"
+import Theatre from "./components/Theatre"
 import PlaylistContainer from "./components/containers/PlaylistContainer";
+import {AppBarWithDrawer} from "./components/appbar/AppBarWithDrawer";
 
 function RootElement() {
   return (
-    <MyContainer>
-      <PlaylistContainer/>
-    </MyContainer>
+    <>
+      <MyAppBar/>
+      <Container>
+        <PlaylistContainer/>
+      </Container>
+    </>
   )
 }
 
 function WatchElement() {
   const [searchParams] = useSearchParams();
   const videoId = searchParams.get("v");
-  return videoId === null
-    ? <>A video id is not given. Back to <Link to="/">Home</Link>.</>
-    : (
-      <MyContainer>
-        <Theatre video={videoId}/>
-      </MyContainer>
-    )
+  return (
+    <>
+      <MyAppBar/>
+      {videoId === null
+        ? <>A video id is not given. Back to <Link to="/">Home</Link>.</>
+        : (
+          <Container>
+            <Theatre video={videoId}/>
+          </Container>
+        )
+      }
+    </>
+  )
 }
 
-function MyContainer(props: PropsWithChildren<{}>) {
+export function MyAppBar() {
+  const navigate = useNavigate();
+  const navigateToRoot = useCallback(() => navigate("/"), [navigate]);
   return (
-    <Container>
-      <Box sx={{marginTop: 6}}>
-        {props.children}
-      </Box>
-    </Container>
+    <AppBarWithDrawer
+      appBarProps={{position: "static", sx: {backgroundColor: "#20232a"}, elevation: 0}}
+      appBarTitle={<Button onClick={navigateToRoot} sx={{color: "inherit"}}>HLS Server</Button>}
+      drawerIcon={<MenuIcon/>}
+      drawerContent={(
+        <List>
+          <ListItemButton>Hello</ListItemButton>
+          <ListItemButton>World</ListItemButton>
+          <Divider/>
+        </List>
+      )}
+    />
   )
 }
 
@@ -45,7 +65,5 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return (
-    <RouterProvider router={router}/>
-  )
+  return <RouterProvider router={router}/>
 }
