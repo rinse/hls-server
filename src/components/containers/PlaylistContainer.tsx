@@ -1,6 +1,6 @@
-import {CircularProgress, Typography} from '@material-ui/core'
-import axios from 'axios'
 import React from 'react'
+import {Typography, CircularProgress} from "@mui/material";
+import axios from 'axios'
 import Playlist from '../Playlist'
 import {PromiseContainer} from '../hooks/usePromise'
 

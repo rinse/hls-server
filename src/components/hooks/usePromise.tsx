@@ -1,15 +1,13 @@
 import React, {ReactElement, ReactNode, useEffect, useState} from "react";
-import {Omit} from "@material-ui/core";
 
 export type PromiseResult<T>
-    = { type: 'rejected', value: Error }
-    | { type: 'pending' }
-    | { type: 'fulfilled', value: T }
+    = {type: 'rejected', value: Error}
+    | {type: 'pending'}
+    | {type: 'fulfilled', value: T}
 
-type AsynchronousFunction<T> = () => Promise<T>
 type DispatchReload = () => void
 
-function usePromise<T>(f: AsynchronousFunction<T>): { result: PromiseResult<T>, reload: DispatchReload } {
+function usePromise<T>(f: () => Promise<T>): {result: PromiseResult<T>, reload: DispatchReload} {
     const [result, setResult] = useState<PromiseResult<T>>({type: 'pending'})
     const [reloadKey, setReloadKey] = useState({})
     useEffect(() => {
@@ -18,7 +16,11 @@ function usePromise<T>(f: AsynchronousFunction<T>): { result: PromiseResult<T>, 
                 setResult({type: 'pending'})
                 setResult({type: 'fulfilled', value: await f()})
             } catch (e) {
-                setResult({type: 'rejected', value: e})
+                if (e instanceof Error) {
+                    setResult({type: 'rejected', value: e})
+                } else {
+                    setResult({type: 'rejected', value: new Error(`$e`)})
+                }
             }
         })()
     }, [f, reloadKey])
@@ -47,11 +49,11 @@ export function PromiseResultRenderer<T>(props: PromiseRendererProps<T>): ReactE
     }
 }
 
-type PromiseContainerProps<T> = { asyncFunction: AsynchronousFunction<T> }
+type PromiseContainerProps<T> = {asyncFunction: () => Promise<T>}
     & Omit<PromiseRendererProps<T>, 'promiseResult'>
 
 export function PromiseContainer<T>(props: PromiseContainerProps<T>) {
     const {asyncFunction, ...others} = props
     const {result} = usePromise(asyncFunction)
-    return <PromiseResultRenderer promiseResult={result} {...others}/>
+    return <PromiseResultRenderer promiseResult={result} {...others} />
 }

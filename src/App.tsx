@@ -1,115 +1,51 @@
-import React, {PropsWithChildren, useState} from 'react'
-import {BrowserRouter as Router, Route} from 'react-router-dom'
-import queryString from 'query-string'
-import Theatre from './components/Theatre'
-import {AppBar, Box, Container, createStyles, Drawer} from "@material-ui/core";
-import clsx from "clsx";
-import {makeStyles} from "@material-ui/core/styles";
-import MyToolbar from "./components/MyToolbar";
-import DrawerContent from "./components/DrawerContent";
+import React, {PropsWithChildren} from "react";
+import {Box, Container} from "@mui/material";
+import {createBrowserRouter, useSearchParams, RouterProvider, Link} from "react-router-dom";
+import Theatre from "./components/Theatre";
 import PlaylistContainer from "./components/containers/PlaylistContainer";
 
-const pxDrawerWidth = 240
-
-const useStyles = makeStyles((theme) => createStyles({
-    appBar: {
-        zIndex: theme.zIndex.drawer + 1,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        backgroundColor: '#20232a',
-    },
-    appBarShift: {
-        marginLeft: pxDrawerWidth,
-        width: `calc(100% - ${pxDrawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-    },
-    drawerPaper: {
-        poison: 'relative',
-        whiteSpace: 'nowrap',
-        width: pxDrawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        })
-    },
-    drawerPaperClose: {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(9),
-        },
-    },
-}))
-
-export default function App() {
-    const classes = useStyles()
-    const [drawerOpen, setDrawerOpen] = useState(false)
-    return (
-        <>
-            <AppBar position="static" className={clsx(classes.appBar, drawerOpen && classes.appBarShift)}>
-                <MyToolbar isDrawerOpen={drawerOpen} onMenuClick={() => setDrawerOpen(true)}/>
-            </AppBar>
-            <Drawer variant="persistent" open={drawerOpen}
-                    classes={{paper: clsx(classes.drawerPaper, !drawerOpen && classes.drawerPaperClose)}}>
-                <DrawerContent onDrawerClose={() => setDrawerOpen(false)}>
-                    {"Hello"}
-                </DrawerContent>
-            </Drawer>
-            <Router>
-                <Route exact path='/'>
-                    <MyContainer>
-                        <PlaylistContainer/>
-                    </MyContainer>
-                </Route>
-                <Route exact path='/watch' render={props => {
-                    const parsedQuery = queryString.parse(props.location.search)
-                    const videoIds = parsedQuery.v
-                    const videoId = safeHead(queryToStringArray(videoIds))
-                    if (videoId === null) {
-                        return `videoId is not valid: ${videoIds}`
-                    }
-                    return (
-                        <MyContainer>
-                            <Theatre video={videoId}/>
-                        </MyContainer>
-                    )
-                }}/>
-            </Router>
-        </>
-    );
+function RootElement() {
+  return (
+    <MyContainer>
+      <PlaylistContainer/>
+    </MyContainer>
+  )
 }
 
-function MyContainer(props: PropsWithChildren<{}>) {
-    return (
-        <Container>
-            <Box marginTop={6}>
-                {props.children}
-            </Box>
-        </Container>
+function WatchElement() {
+  const [searchParams] = useSearchParams();
+  const videoId = searchParams.get("v");
+  return videoId === null
+    ? <>A video id is not given. Back to <Link to="/">Home</Link>.</>
+    : (
+      <MyContainer>
+        <Theatre video={videoId}/>
+      </MyContainer>
     )
 }
 
-function queryToStringArray(q: string | string[] | null | undefined): string[] {
-    if (typeof q === 'string') {
-        return [q]
-    } else if (q === null) {
-        return []
-    } else if (q === undefined) {
-        return []
-    } else {
-        return q
-    }
+function MyContainer(props: PropsWithChildren<{}>) {
+  return (
+    <Container>
+      <Box sx={{marginTop: 6}}>
+        {props.children}
+      </Box>
+    </Container>
+  )
 }
 
-function safeHead(a: string[]): string | null {
-    return a.length > 0 ? a[0] : null;
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootElement/>,
+  }, {
+    path: "/watch",
+    element: <WatchElement/>,
+  }
+]);
+
+export default function App() {
+  return (
+    <RouterProvider router={router}/>
+  )
 }
