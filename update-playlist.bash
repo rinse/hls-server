@@ -9,5 +9,5 @@ mkdir -p "$workDir"
 
 ls "$workDir" | grep -v "$playlist" \
     | jq -R .               \
-    | jq -sc '{videos: .}'  \
+    | jq -s '{videos: .}'  \
     > "$workDir/$playlist"
