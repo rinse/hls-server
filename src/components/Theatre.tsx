@@ -18,7 +18,7 @@ export default function Theatre(props: TheatreProps) {
         <Typography sx={{fontWeight: "bold", fontSize: 18}}>{video}</Typography>
       </Box>
       <Paper variant="outlined">
-        <PlaylistContainer/>
+        <PlaylistContainer videoIdPlaying={props.video}/>
       </Paper>
     </>
   )
