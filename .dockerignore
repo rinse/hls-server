@@ -15,6 +15,7 @@
 /build
 
 # Scripts or resources for development
+/videos
 /public/videos
 /README.md
 /deployHLS.bash
