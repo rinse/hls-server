@@ -1,8 +1,8 @@
-import React from 'react'
+import React, {useCallback} from 'react'
 import {Typography, CircularProgress} from "@mui/material";
-import axios from 'axios'
-import Playlist from '../Playlist'
-import {PromiseResultRenderer, usePromise} from '../hooks/usePromise'
+import axios from "axios";
+import Playlist from "../Playlist";
+import {PromiseResultRenderer, usePromise} from "../hooks/usePromise";
 
 type PlaylistJson = {
   videoIds: string[],
@@ -22,10 +22,11 @@ type PlaylistContainerProps = {
 
 export default function PlaylistContainer(props: PlaylistContainerProps) {
   const result = usePromise(fetchPlaylist);
+  const circularProgress = useCallback(() => <CircularProgress/>, []);
   return (
     <PromiseResultRenderer
       result={result}
-      onPending={() => <CircularProgress/>}
+      onPending={circularProgress}
       onRejected={e => <Typography>{e.message}</Typography>}
       onFulfilled={playlist => <Playlist videoIds={playlist.videoIds} selected={props.videoIdPlaying}/>}
     />
