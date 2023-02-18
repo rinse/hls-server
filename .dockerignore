@@ -1,12 +1,23 @@
+# Git
+/.git
+/.gitignore
+
+# Docker
 /docker-compose.yml
 /Dockerfile
 
+# IDE
+/.idea
 /hls-streaming.iml
 
+# Node
 /node_modules
 /build
 
+# Scripts or resources for development
 /public/videos
 /README.md
-/mkPlaylist.bash
+/deployHLS.bash
 /toHLS.bash
+/update-playlist.bash
+/temp
