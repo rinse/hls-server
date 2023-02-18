@@ -4,21 +4,22 @@ import ReactPlayer from 'react-player'
 import PlaylistContainer from './containers/PlaylistContainer'
 
 export interface TheatreProps {
-  video: string
+  videoId: string
 }
 
 export default function Theatre(props: TheatreProps) {
-  const {video} = props;
+  const {videoId} = props;
+  const videoTitle = videoId;
   return (
     <>
-      <ReactPlayer url={`/videos/${video}/index.m3u8`}
+      <ReactPlayer url={`/videos/${videoId}/index.m3u8`}
                    className='react-player' controls
                    width='100%' height='100%'/>
       <Box sx={{margin: 1}}>
-        <Typography sx={{fontWeight: "bold", fontSize: 18}}>{video}</Typography>
+        <Typography sx={{fontWeight: "bold", fontSize: 18}}>{videoTitle}</Typography>
       </Box>
       <Paper variant="outlined">
-        <PlaylistContainer videoIdPlaying={props.video}/>
+        <PlaylistContainer videoIdPlaying={props.videoId}/>
       </Paper>
     </>
   )

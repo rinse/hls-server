@@ -27,7 +27,7 @@ function WatchElement() {
         ? <>A video id is not given. Back to <Link to="/">Home</Link>.</>
         : (
           <Container>
-            <Theatre video={videoId}/>
+            <Theatre videoId={videoId}/>
           </Container>
         )
       }
