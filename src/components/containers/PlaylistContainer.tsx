@@ -4,12 +4,16 @@ import axios from 'axios'
 import Playlist from '../Playlist'
 import {PromiseResultRenderer, usePromise} from '../hooks/usePromise'
 
-async function fetchPlaylist(): Promise<string[]> {
+type PlaylistJson = {
+  videoIds: string[],
+}
+
+async function fetchPlaylist(): Promise<PlaylistJson> {
   const playlist = await axios.get('/videos/playlist.json', {timeout: 5000}).then(res => res.data)
-  if (playlist.videos === undefined || playlist.videos === null) {
+  if (playlist.videoIds === undefined || playlist.videoIds === null) {
     throw new Error('Failed to fetch playlist.')
   }
-  return playlist.videos as string[]
+  return playlist
 }
 
 type PlaylistContainerProps = {
@@ -23,7 +27,7 @@ export default function PlaylistContainer(props: PlaylistContainerProps) {
       result={result}
       onPending={() => <CircularProgress/>}
       onRejected={e => <Typography>{e.message}</Typography>}
-      onFulfilled={value => <Playlist videoTitles={value} selected={props.videoIdPlaying}/>}
+      onFulfilled={playlist => <Playlist videoIds={playlist.videoIds} selected={props.videoIdPlaying}/>}
     />
   )
 }
