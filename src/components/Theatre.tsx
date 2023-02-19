@@ -3,12 +3,13 @@ import {Box, Paper, Typography} from "@mui/material";
 import ReactPlayer from 'react-player'
 import PlaylistContainer from './containers/PlaylistContainer'
 
-export interface TheatreProps {
-  videoId: string
+export type TheatreProps = {
+  videoId: string,
+  navigateTo: (destination: string) => void,
 }
 
 export default function Theatre(props: TheatreProps) {
-  const {videoId} = props;
+  const {videoId, navigateTo} = props;
   const videoTitle = videoId;
   return (
     <>
@@ -19,7 +20,7 @@ export default function Theatre(props: TheatreProps) {
         <Typography sx={{fontWeight: "bold", fontSize: 18}}>{videoTitle}</Typography>
       </Box>
       <Paper variant="outlined">
-        <PlaylistContainer videoIdPlaying={props.videoId}/>
+        <PlaylistContainer videoIdPlaying={videoId} navigateTo={navigateTo}/>
       </Paper>
     </>
   )

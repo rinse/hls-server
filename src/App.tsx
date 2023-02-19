@@ -7,17 +7,19 @@ import PlaylistContainer from "./components/containers/PlaylistContainer";
 import {AppBarWithDrawer} from "./components/appbar/AppBarWithDrawer";
 
 function RootElement() {
+  const navigate = useNavigate();
   return (
     <>
       <MyAppBar/>
       <Container>
-        <PlaylistContainer/>
+        <PlaylistContainer navigateTo={navigate}/>
       </Container>
     </>
   )
 }
 
 function WatchElement() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const videoId = searchParams.get("v");
   return (
@@ -27,7 +29,7 @@ function WatchElement() {
         ? <>A video id is not given. Back to <Link to="/">Home</Link>.</>
         : (
           <Container>
-            <Theatre videoId={videoId}/>
+            <Theatre videoId={videoId} navigateTo={navigate}/>
           </Container>
         )
       }

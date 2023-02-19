@@ -16,11 +16,13 @@ async function fetchPlaylist(): Promise<PlaylistJson> {
   return playlist
 }
 
-type PlaylistContainerProps = {
+export type PlaylistContainerProps = {
   videoIdPlaying?: string,
+  navigateTo: (destination: string) => void,
 }
 
 export default function PlaylistContainer(props: PlaylistContainerProps) {
+  const {videoIdPlaying, navigateTo} = props;
   const result = usePromise(fetchPlaylist);
   const circularProgress = useCallback(() => <CircularProgress/>, []);
   return (
@@ -28,7 +30,8 @@ export default function PlaylistContainer(props: PlaylistContainerProps) {
       result={result}
       onPending={circularProgress}
       onRejected={e => <Typography>{e.message}</Typography>}
-      onFulfilled={playlist => <Playlist videoIds={playlist.videoIds} selected={props.videoIdPlaying}/>}
+      onFulfilled={playlist =>
+        <Playlist videoIds={playlist.videoIds} selected={videoIdPlaying} navigateTo={navigateTo}/>}
     />
   )
 }
