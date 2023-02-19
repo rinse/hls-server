@@ -18,6 +18,7 @@ export default function Theatre(props: TheatreProps) {
                      className='react-player'
                      controls
                      playing={true}
+                     light={<img src={`/videos/${videoId}/thumbnail.png`} alt="thumbnail" style={{width: "100%", height: "100%"}} />}
                      width='100%' height='100%'/>
       </Box>
       <Box sx={{margin: 1}}>
