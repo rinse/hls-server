@@ -13,11 +13,13 @@ export default function Theatre(props: TheatreProps) {
   const videoTitle = videoId;
   return (
     <>
-      <ReactPlayer url={`/videos/${videoId}/index.m3u8`}
-                   className='react-player'
-                   controls
-                   playing={true}
-                   width='100%' height='100%'/>
+      <Box sx={{position: "sticky", top: 0, zIndex: 1}}>
+        <ReactPlayer url={`/videos/${videoId}/index.m3u8`}
+                     className='react-player'
+                     controls
+                     playing={true}
+                     width='100%' height='100%'/>
+      </Box>
       <Box sx={{margin: 1}}>
         <Typography sx={{fontWeight: "bold", fontSize: 18}}>{videoTitle}</Typography>
       </Box>
