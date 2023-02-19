@@ -14,7 +14,9 @@ export default function Theatre(props: TheatreProps) {
   return (
     <>
       <ReactPlayer url={`/videos/${videoId}/index.m3u8`}
-                   className='react-player' controls
+                   className='react-player'
+                   controls
+                   playing={true}
                    width='100%' height='100%'/>
       <Box sx={{margin: 1}}>
         <Typography sx={{fontWeight: "bold", fontSize: 18}}>{videoTitle}</Typography>
