@@ -27,4 +27,4 @@ ffmpeg -i "$INPUT_FILE" -y                                                  \
         -f hls -hls_time 10 -hls_playlist_type vod -hls_segment_filename    \
         "$OUTPUT_DIR/segment_%3d.ts" "$OUTPUT_DIR/index.m3u8"
 # Generates a thumbnail
-ffmpeg -i "$INPUT_FILE" -ss 5 -vframes 1 -f image2 -s 320x240 "$OUTPUT_DIR/thumbnail.png"
+ffmpeg -i "$INPUT_FILE" -vframes 1 -vf thumbnail=100 "$OUTPUT_DIR/thumbnail.png"
