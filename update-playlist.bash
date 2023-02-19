@@ -8,6 +8,7 @@ playlist=playlist.json
 mkdir -p "$workDir"
 
 ls "$workDir" | grep -v "$playlist" \
-    | jq -R .               \
+    | sort    \
+    | jq -R . \
     | jq -s '{videoIds: .}'  \
     > "$workDir/$playlist"
